@@ -1,0 +1,68 @@
+version: "3.6"
+
+services:
+  composer:
+    image: finalgene/composer
+    container_name: php-ci-sandbox_composer
+    working_dir: /var/www/app
+    environment:
+      - COMPOSER_HOME=/composer
+    volumes:
+      - /private/etc/passwd:/etc/passwd:ro,delegated
+      - /private/etc/group:/etc/group:ro,delegated
+      - .:/var/www/app:cached
+      - composer:/composer
+
+  nginx:
+    image: nginx:1.15-alpine
+    container_name: php-ci-sandbox_nginx
+    working_dir: /var/www/app
+    depends_on:
+      - php-fpm
+    ports:
+      - 8080:80
+    volumes:
+      - ./.docker/nginx/nginx.conf:/etc/nginx/nginx.conf:ro,delegated
+      - ./.docker/nginx/conf.d:/etc/nginx/conf.d:ro,delegated
+      - ./var/log/nginx:/var/log/nginx:delegated
+      - .:/var/www/app:ro,cached
+
+  php:
+    image: finalgene/php-cli:7.3-xdebug
+    container_name: php-ci-sandbox_php
+    working_dir: /var/www/app
+    environment:
+      - PHP_ERROR_LOG=/var/log/php7/error.log
+      - XDEBUG_ENABLE=${XDEBUG_ENABLE}
+      - XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST}
+      - XDEBUG_REMOTE_PORT=${XDEBUG_REMOTE_PORT}
+      - XDEBUG_REMOTE_LOG=${XDEBUG_REMOTE_LOG}
+      - XDEBUG_PROFILER_OUTPUT_DIR=${XDEBUG_PROFILER_OUTPUT_DIR}
+      - XDEBUG_TRACE_OUTPUT_DIR=${XDEBUG_TRACE_OUTPUT_DIR}
+    volumes:
+      - ./.docker/php/conf.d:/usr/local/etc/php/conf.d
+      - ./var/log/php:/var/log/php7:delegated
+      - ./:/var/www/app:cached
+
+  php-fpm:
+    image: php:7.3-fpm-alpine3.9
+    container_name: php-ci-sandbox_php-fpm
+    working_dir: /var/www/app
+    environment:
+      - APP_ENV=${APP_ENV}
+      - APP_SECRET=${APP_SECRET}
+      - PHP_ERROR_LOG=/var/log/php7/error.log
+      - XDEBUG_ENABLE=${XDEBUG_ENABLE}
+      - XDEBUG_REMOTE_HOST=${XDEBUG_REMOTE_HOST}
+      - XDEBUG_REMOTE_PORT=${XDEBUG_REMOTE_PORT}
+      - XDEBUG_REMOTE_LOG=${XDEBUG_REMOTE_LOG}
+      - XDEBUG_PROFILER_OUTPUT_DIR=${XDEBUG_PROFILER_OUTPUT_DIR}
+      - XDEBUG_TRACE_OUTPUT_DIR=${XDEBUG_TRACE_OUTPUT_DIR}
+    volumes:
+      - ./.docker/php/conf.d:/usr/local/etc/php/conf.d
+      - ./.docker/php/php-fpm.d:/usr/local/etc/php-fpm.d
+      - ./var/log/php:/var/log/php7:delegated
+      - ./:/var/www/app:cached
+
+volumes:
+  composer:

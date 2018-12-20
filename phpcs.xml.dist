@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- https://edorian.github.io/php-coding-standard-generator/#phpcs -->
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/3.3.1/phpcs.xsd"
+         name="pcsg-generated-ruleset">
+    <description>Created with the PHP Coding Standard Generator.</description>
+    <config name="installed_paths" value="tools/squizlabs/vendor/slevomat/coding-standard"/>
+
+    <file>./bin</file>
+    <file>./config</file>
+    <file>./public</file>
+    <file>./src</file>
+    <file>./tests</file>
+
+    <rule ref="Generic.Classes.DuplicateClassName"/>
+
+    <rule ref="Generic.CodeAnalysis.EmptyStatement"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Generic.CodeAnalysis.UselessOverridingMethod"/>
+
+    <rule ref="Generic.Commenting.Fixme"/>
+
+    <rule ref="Generic.ControlStructures.InlineControlStructure"/>
+
+    <rule ref="Generic.Files.ByteOrderMark"/>
+    <rule ref="Generic.Files.LineEndings"/>
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+        </properties>
+    </rule>
+
+    <rule ref="Generic.Formatting.DisallowMultipleStatements"/>
+    <rule ref="Generic.Formatting.NoSpaceAfterCast"/>
+
+    <rule ref="Generic.Functions.CallTimePassByReference"/>
+    <rule ref="Generic.Functions.FunctionCallArgumentSpacing"/>
+
+    <rule ref="Generic.Metrics.NestingLevel">
+        <properties>
+            <property name="nestingLevel" value="3"/>
+            <property name="absoluteNestingLevel" value="5"/>
+        </properties>
+    </rule>
+
+    <rule ref="Generic.NamingConventions.ConstructorName"/>
+    <rule ref="Generic.NamingConventions.UpperCaseConstantName"/>
+
+    <rule ref="Generic.NamingConventions.CamelCapsFunctionName"/>
+
+    <rule ref="Generic.PHP.DisallowShortOpenTag"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="Generic.PHP.LowerCaseConstant"/>
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
+    <rule ref="Generic.WhiteSpace.ScopeIndent"/>
+
+    <rule ref="MySource.PHP.EvalObjectFactory"/>
+
+    <rule ref="PEAR.Classes.ClassDeclaration"/>
+
+    <!--
+    <rule ref="PEAR.Commenting.ClassComment"/>
+    <rule ref="PEAR.Commenting.FileComment"/>
+    <rule ref="PEAR.Commenting.FunctionComment"/>
+    <rule ref="PEAR.Commenting.InlineComment"/>
+    -->
+
+    <rule ref="PEAR.ControlStructures.ControlSignature"/>
+    <rule ref="PEAR.ControlStructures.MultiLineCondition"/>
+
+    <rule ref="PEAR.Files.IncludingFile"/>
+
+    <rule ref="PEAR.Formatting.MultiLineAssignment"/>
+
+    <rule ref="PEAR.Functions.FunctionCallSignature">
+        <properties>
+            <property name="allowMultipleArguments" value="false"/>
+        </properties>
+    </rule>
+    <rule ref="PEAR.Functions.FunctionDeclaration"/>
+    <rule ref="PEAR.Functions.ValidDefaultValue"/>
+
+    <rule ref="PEAR.WhiteSpace.ObjectOperatorIndent"/>
+    <rule ref="PEAR.WhiteSpace.ScopeClosingBrace"/>
+
+    <rule ref="PSR2"/>
+</ruleset>
