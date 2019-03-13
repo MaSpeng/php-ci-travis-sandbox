@@ -1,0 +1,46 @@
+language: minimal
+
+services: docker
+
+env:
+  global:
+    - secure: INyCKGJnk/XFgTyOijKDGNR63qyue4pIZziJCcelOWnph0kBVdh3zGzqGwVTDIdNUPewNq6xAU1C2vhq8b5XHb0zSzT2UoUgLoYG6Ev08VdpwXMakWEYrGon4yRa0hXw5dMS7+SYWx0Lu1CMmOL7kAkFwGeDsBfeKUi0UNrEYKdYxQjWm7UMY/WJ9hmFXeFurdhDoUrt9e7WuUqPuI7GrP2RsUQymxqrdcKk8n5rKv/9RdXXg81lmicxR5gzSGeO90/QIqTEMcSLtEA5x4JYnUG02LdwdOOmXheU+rzkYToVpzQy742HoTTFUN7KVKKaI/dL0ZW3UMknufOMA8thjFt0hVFTubVTHIB1fKZTyGmVUu+Orbja2t8jGP9jzdJ48phaHy+njKJPWg3QfjUF+CwkqNcGQtCFwRvX2JWVPddQ463ChvSLWluiAMXuKL3tQOZbZqv4Mfu/ehaGmgi6zZkpCzpmhqsrPDU6NlekHt41coGLO3i1l1VjsYfDxDhcKNWeCN/W4EhTcBr/oEbu60Qwt4AY87hGyG3/pAIQzybUU4PUmj1CApozInsp6kVuTvtmdMw1R/sOHAK9LohC/Iw6RUJwfyPdAnHydexCZRMsLUzg2+yRvVbqDhRMJ95L1uIxoIb22Y87HmK4nXdZMHAA0Rt1r8I2y0go7vB8qEw=
+
+jobs:
+  include:
+    -
+      name: Analysis
+      stage: test
+      script: docker-compose run --rm php tools/phpstan/vendor/bin/phpstan analyze src tests
+
+    -
+      name: Style-Check
+      stage: test
+      script: docker-compose run --rm php tools/squizlabs/vendor/bin/phpcs -p -s
+
+    -
+      name: PHPUnit
+      stage: test
+      script: docker-compose run --rm php tools/phpunit/vendor/bin/phpunit --coverage-text
+
+    -
+      if: tag IS present
+      name: Create release artifact
+      stage: deploy
+      script:
+        - docker-compose run --rm php bin/build.sh
+        - zip -q -r release.zip build/
+
+install:
+  - docker-compose run --rm php composer install --no-interaction
+  - docker-compose run --rm php composer bin all install --no-interaction
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: nw9wUEoYc999w45dcdgRxigLoRV3hDgxc3F9m1umgMiCT/zwlCp+As4RDtkxOXOR2J8M+/WFTPl2gdEFEp7RhrLGOaNnc6efH/78CvvdbvonQVa5fYzWGq+7OhYj19uK/rSMYA0+ADUcbOq2YeX5usE4OXwI+/AUk7l7d4mXfiHjO5A3sdz7eInVjdD10Aa4YEYX4wdruOfSGtAI1TDPvjHiDzg3DovWEnAgOMex1mOKZXWhNYuPk4Z1U7MQsM4ZqTWGEFDwdeqlMK8j/D2R1iDyUuF4toU7vyExhYQZMYnT0+OPZUUWiQNHcUfbxpHE965u9ONU/QFRz+gOSP39lNubgL6k2AzsXM2YsXiBoC/XusXueVuW10vUXg044AGyg/laH6hZ64VPHOznsFdiuX0vMqShNX4MoUEVMc9xmPgkwo3AW2oA5UxZiGtZDJd9Xn/SmC+oXqV4VO0YjBXzPuuErwKsEv0hMZobpKc4MOaM5OzAPW0WKzUE0PaqI2nOXYskGOIpzbWlwRZ/2xCVQkwS/CBlbdxgjyWLE052rf21aEpqANmPiiIE0uGihnt2Gp3FC8fPhpbgYXMJJUGFdtNwxH3pMEeczc+KbIXIVzb+/+Po6mDCVR71kCIGFh3VmkZE8TCaewV2ogCYfS92X6LXlFeGzZxF+ymnSqIDPW0=
+  file:
+    - release.zip
+  on:
+    tags: true
