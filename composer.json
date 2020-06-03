@@ -1,22 +1,32 @@
 {
+    "name": "maspeng/php-ci-sandbox",
+    "description": "Sandbox repository to demonstrate various CI configurations",
     "type": "project",
     "license": "proprietary",
+    "authors": [
+        {
+            "name": "Marco Spengler",
+            "email": "maspeng@outlook.com",
+            "homepage": "https://gitlab.com/MaSpeng",
+            "role": "Developer"
+        }
+    ],
     "require": {
-        "php": "^7.1.3",
+        "php": "^7.4.6",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "ext-json": "*",
-        "sensio/framework-extra-bundle": "^5.2",
-        "symfony/console": "4.2.*",
-        "symfony/dotenv": "4.2.*",
-        "symfony/flex": "^1.1",
-        "symfony/framework-bundle": "4.2.*",
-        "symfony/yaml": "4.2.*"
+        "sensio/framework-extra-bundle": "^5.5.5",
+        "symfony/console": "5.1.*",
+        "symfony/dotenv": "5.1.*",
+        "symfony/flex": "^1.3.1",
+        "symfony/framework-bundle": "5.1.*",
+        "symfony/yaml": "5.1.*"
     },
     "require-dev": {
-        "bamarni/composer-bin-plugin": "^1.2"
+        "bamarni/composer-bin-plugin": "^1.4"
     },
     "config": {
+        "optimize-autoloader": true,
         "preferred-install": {
             "*": "dist"
         },
@@ -24,22 +34,19 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "MaSpeng\\PhpCiSandbox\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": [
-                "tests/Functional/",
-                "tests/Integration/",
-                "tests/Unit/"
-            ]
+            "MaSpeng\\PhpCiSandbox\\Tests\\Unit\\": "tests/Unit/"
         }
     },
     "replace": {
         "paragonie/random_compat": "2.*",
         "symfony/polyfill-ctype": "*",
         "symfony/polyfill-iconv": "*",
+        "symfony/polyfill-php72": "*",
         "symfony/polyfill-php71": "*",
         "symfony/polyfill-php70": "*",
         "symfony/polyfill-php56": "*"
@@ -54,6 +61,36 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "analyze-code": [
+            "tools/phpstan/vendor/bin/phpstan --version",
+            "tools/phpstan/vendor/bin/phpstan --no-progress --memory-limit=-1 -- analyse"
+        ],
+        "fix-style": [
+            "tools/squizlabs/vendor/bin/phpcbf --version",
+            "tools/squizlabs/vendor/bin/phpcbf -p"
+        ],
+        "install-tools": [
+            "for TOOL in tools/*; do if [[ ! -f \"${TOOL}/composer.json\" ]]; then rm -Rf \"${TOOL}\"; fi done",
+            "@composer bin all install"
+        ],
+        "lint": [
+            "tools/squizlabs/vendor/bin/phpcs --version",
+            "tools/squizlabs/vendor/bin/phpcs -p -s"
+        ],
+        "lint-config": [
+            "bin/console lint:yaml config"
+        ],
+        "lint-container": [
+            "bin/console lint:container"
+        ],
+        "test": [
+            "tools/phpunit/vendor/bin/phpunit --version",
+            "tools/phpunit/vendor/bin/phpunit --log-junit=test-report.xml"
+        ],
+        "test-with-coverage": [
+            "tools/phpunit/vendor/bin/phpunit --version",
+            "tools/phpunit/vendor/bin/phpunit --testsuite \"Unit tests\" --log-junit=test-report.xml --coverage-clover=clover.xml"
         ]
     },
     "conflict": {
@@ -61,11 +98,12 @@
     },
     "extra": {
         "bamarni-bin": {
+            "bin-links": false,
             "target-directory": "tools"
         },
         "symfony": {
             "allow-contrib": false,
-            "require": "4.2.*"
+            "require": "5.1.*"
         }
     }
 }

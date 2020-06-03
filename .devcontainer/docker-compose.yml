@@ -1,0 +1,11 @@
+version: '2.4'
+
+services:
+  php:
+    stdin_open: true
+    tty: true
+    volumes:
+      - vs_code_extensions:/root/.vscode-server/extensions
+
+volumes:
+  vs_code_extensions:

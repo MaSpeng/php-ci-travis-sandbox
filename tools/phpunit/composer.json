@@ -1,6 +1,6 @@
 {
     "require-dev": {
-        "symfony/phpunit-bridge": "^4.2"
+        "phpunit/phpunit": "^9.1.5"
     },
     "config": {
         "preferred-install": {
