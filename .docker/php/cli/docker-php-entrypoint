@@ -1,0 +1,52 @@
+#!/bin/sh
+
+set -e
+
+# remove possible existing xdebug configuration from prior execution
+rm -f \
+  ${PHP_INI_DIR}/conf.d/docker-php-ext-xdebug.ini
+
+# enable/disable APCu
+if [ "${APCU_ENABLE}" = "On" ]; then
+    APCU_ENABLE=1
+    export APCU_ENABLE_CLI=1
+else
+    APCU_ENABLE=0
+    export APCU_ENABLE_CLI=0
+fi
+
+# enable/disable OPcache
+if [ "${OPCACHE_ENABLE}" = "On" ]; then
+    OPCACHE_ENABLE=1
+    export OPCACHE_ENABLE_CLI=1
+else
+    OPCACHE_ENABLE=0
+    export OPCACHE_ENABLE_CLI=0
+fi
+
+# enable/disable PCOV
+if [ "${PCOV_ENABLE}" = "On" ]; then
+    PCOV_ENABLE=1
+else
+    PCOV_ENABLE=0
+fi
+
+# enable Xdebug
+if [ "${XDEBUG_ENABLE}" = "On" ]; then
+    if [ ! -z "${XDEBUG_PROFILER_OUTPUT_DIR}" ]; then
+        mkdir -p "${XDEBUG_PROFILER_OUTPUT_DIR}"
+    fi
+
+    if [ ! -z "${XDEBUG_TRACE_OUTPUT_DIR}" ]; then
+        mkdir -p "${XDEBUG_TRACE_OUTPUT_DIR}"
+    fi
+
+    echo "zend_extension=xdebug.so" > ${PHP_INI_DIR}/conf.d/docker-php-ext-xdebug.ini
+fi
+
+# first arg is `-f` or `--help`
+if [ "${1#-}" != "$1" ]; then
+    set -- php "$@"
+fi
+
+exec "$@"

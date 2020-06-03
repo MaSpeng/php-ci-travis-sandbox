@@ -1,6 +1,17 @@
 includes:
-    - "tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon"
-    - "tools/phpstan/vendor/jangregor/phpstan-prophecy/src/extension.neon"
+    - tools/phpstan/vendor/jangregor/phpstan-prophecy/src/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/extension.neon
+    - tools/phpstan/vendor/phpstan/phpstan-phpunit/rules.neon
+    - tools/phpstan/vendor/phpstan/phpstan-symfony/extension.neon
 
 parameters:
-    level: 7
+    level: max
+
+paths:
+    - bin
+    - config
+    - src
+
+autoload_files:
+    - vendor/autoload.php
+    - tools/phpunit/vendor/autoload.php

@@ -1,29 +1,19 @@
 <?php declare(strict_types=1);
 /**
- * This file is part of the gitlab-php-ci-sandbox project.
- *
  * @author Marco Spengler <MaSpeng@outlook.de>
  */
 
-namespace App\Controller;
+namespace MaSpeng\PhpCiSandbox\Tests\Unit\Controller;
 
+use MaSpeng\PhpCiSandbox\Controller\HomeController;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * Home controller test class
- *
- * @package App\Controller
- *
- * @covers  \App\Controller\HomeController
+ * @covers \MaSpeng\PhpCiSandbox\Controller\HomeController
  */
 class HomeControllerTest extends TestCase
 {
-    /**
-     * Test index action
-     *
-     * @return void
-     */
     public function testIndexAction(): void
     {
         $controller = $this->createPartialMock(
